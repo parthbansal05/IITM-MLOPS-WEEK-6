@@ -1,17 +1,3 @@
-ipykernel
-ipython
-ipython-genutils
-ipywidgets
-jsonschema
-jupyter
-jupyter-client
-jupyter-console
-jupyter-core
-MarkupSafe
-mistune
-nbconvert
-nbformat
-notebook
 numpy
 pandas
 scikit-learn
