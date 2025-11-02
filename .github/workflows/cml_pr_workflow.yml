@@ -99,7 +99,7 @@ jobs:
 
       # DEBUG STEP: This will print the value and show us if it's empty.
       - name: DEBUG - Print received image URL
-        run: echo "The image URL received from the build job is: ${{ needs.build-and-push-docker.outputs.image_url }}"
+        run: echo "The image URL received from the build job is ${{ needs.build-and-push-docker.outputs.image_url }}"
 
       - name: Update Kubernetes deployment with new image URL
         run: |
