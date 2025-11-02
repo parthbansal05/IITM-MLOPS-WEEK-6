@@ -10,7 +10,7 @@ import numpy as np
 
 
 # Define file paths
-model_path = 'artifacts/svm_iris_model.joblib'
+model_path = 'application/artifacts/svm_iris_model.joblib'
 data_path = 'data/data.csv'
 METRICS_FILEPATH = 'artifacts/metrics.json'
 CM_PLOT_PATH = 'artifacts/confusion_matrix.png'

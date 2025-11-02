@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iris-fastapi-deployment
+  labels:
+    app: iris-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: iris-api
+  template:
+    metadata:
+      labels:
+        app: iris-api
+    spec:
+      containers:
+      - name: iris-fastapi-container
+        # This will be replaced by the GitHub Action
+        image: ARTIFACT_REGISTRY_HOST/PROJECT_ID/REPOSITORY_NAME/iris-api:latest
+        ports:
+        - containerPort: 8000
+        # Recommended readiness/liveness probes for FastAPI
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: iris-fastapi-service
+spec:
+  # Type LoadBalancer exposes the service publicly via a cloud load balancer
+  type: LoadBalancer 
+  selector:
+    app: iris-api
+  ports:
+    # Port exposed by the load balancer (e.g., 80)
+    - port: 80 
+      # Port the container is listening on (defined in Dockerfile)
+      targetPort: 8000 
+      protocol: TCP

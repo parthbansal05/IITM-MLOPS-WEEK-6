@@ -20,7 +20,7 @@ model = svm.SVC(kernel='linear', C=0.001)
 model.fit(train_X, train_y)
 
 
-filename = 'artifacts/svm_iris_model.joblib'
+filename = 'application/artifacts/svm_iris_model.joblib'
 os.makedirs(os.path.dirname(filename), exist_ok=True)
 joblib.dump(model, filename)
 print(f"\nModel successfully saved as: {filename}")
