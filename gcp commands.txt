@@ -1,0 +1,2 @@
+gcloud services enable artifactregistry.googleapis.com
+gcloud artifacts repositories create iris-app-repo     --repository-format=docker     --location=us-central1     --description="Repository for the Iris application"

@@ -48,6 +48,6 @@ def predict(data: IrisInput):
     print(predicted_species)
     return {
         "prediction": predicted_species,
-        "version": 1,
+        "version": 2,
         "input_features": data.model_dump()
     }
