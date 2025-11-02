@@ -12,8 +12,8 @@ import numpy as np
 # Define file paths
 model_path = 'application/artifacts/svm_iris_model.joblib'
 data_path = 'data/data.csv'
-METRICS_FILEPATH = 'artifacts/metrics.json'
-CM_PLOT_PATH = 'artifacts/confusion_matrix.png'
+METRICS_FILEPATH = 'application/artifacts/metrics.json'
+CM_PLOT_PATH = 'application/artifacts/confusion_matrix.png'
 
 try:
     model = joblib.load(model_path)

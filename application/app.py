@@ -2,12 +2,10 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import numpy as np
-import os
 from sklearn.datasets import load_iris
-from sklearn.ensemble import RandomForestClassifier
 
 
-MODEL_PATH = "model.pkl"
+MODEL_PATH = "artifacts/model.pkl" 
 
 
 # --- 2. FastAPI Setup ---
@@ -45,10 +43,7 @@ def predict(data: IrisInput):
         [data.sepal_length, data.sepal_width, data.petal_length, data.petal_width]
     ])
 
-    # Make prediction
     prediction_index = classifier.predict(input_data)[0]
-    
-    # Map index to species name
     predicted_species = IRIS_TARGET_NAMES[prediction_index]
     
     return {
