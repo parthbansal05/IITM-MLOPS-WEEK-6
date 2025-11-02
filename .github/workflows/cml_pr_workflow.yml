@@ -46,6 +46,9 @@ jobs:
     # This job only runs for push events on the main branch
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    # Reason for change: Added 'outputs' to pass the built image URL to the next job.
+    outputs:
+      image_url: ${{ steps.build-image.outputs.image_url }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -63,9 +66,51 @@ jobs:
         run: gcloud auth configure-docker ${{ secrets.GAR_LOCATION }}-docker.pkg.dev
 
       - name: Build and Push Docker Image to GAR
+        # Reason for change: Added an 'id' to reference this step's output later.
+        id: build-image
         uses: docker/build-push-action@v5
         with:
           context: ./application
           file: ./application/Dockerfile
           push: true
-          tags: ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/iris-app-repo/iris-fastapi-app:latest
+          # Reason for change: Tagging with the commit SHA instead of 'latest' ensures each
+          # deployment uses a unique, traceable image version.
+          tags: ${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/iris-app-repo/iris-fastapi-app:${{ github.sha }}
+      
+      # Reason for change: This new step explicitly sets the output variable for the deployment job to use.
+      - name: Set Image URL Output
+        run: echo "image_url=${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/iris-app-repo/iris-fastapi-app:${{ github.sha }}" >> $GITHUB_OUTPUT
+
+  # CD Job 2: Deploy to GKE
+  deploy-to-gke:
+    # This job only runs on push to main
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # Reason for adding: This 'needs' clause ensures deployment only happens after a successful build.
+    needs: build-and-push-docker
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Get GKE cluster credentials
+        uses: 'google-github-actions/get-gke-credentials@v2'
+        with:
+          cluster_name: ${{ secrets.GKE_CLUSTER_NAME }}
+          location: ${{ secrets.GKE_ZONE }}
+
+      - name: Update Kubernetes deployment with new image URL
+        run: |
+          # This command finds and replaces the placeholder in your deployment file
+          # with the actual image URL from the build job.
+          sed -i 's|IMAGE_URL_PLACEHOLDER|${{ needs.build-and-push-docker.outputs.image_url }}|g' k8s/deployment.yaml
+
+      - name: Apply Kubernetes manifests
+        run: |
+          # This command deploys your application to the GKE cluster.
+          kubectl apply -f k8s/

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iris-fastapi-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: iris-fastapi
+  template:
+    metadata:
+      labels:
+        app: iris-fastapi
+    spec:
+      containers:
+      - name: iris-fastapi-app
+        # This image URL is a placeholder that will be replaced by the CI/CD pipeline
+        image: IMAGE_URL_PLACEHOLDER
+        ports:
+        - containerPort: 8000
