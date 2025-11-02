@@ -1,10 +1,6 @@
-Here’s a **professional and concise README** tailored for your project structure and assignment:
-
----
-
 # **Continuous Deployment of IRIS API using GitHub Actions & GCP**
 
-**Author:** Parth Bansal
+**Author:** Parth Bansal  
 **Enrollment Number:** 21F3000805
 
 ---
@@ -95,7 +91,3 @@ Automates the CI/CD pipeline through workflow YAML files:
 
 This project is developed as part of the **IIT Madras MLOps Week 4** assignment —
 *"Continuous Deployment of IRIS API using GitHub Actions and Google Cloud Platform (GCP)."*
-
----
-
-Would you like me to make this README Markdown file ready for download (`README.md`)?
