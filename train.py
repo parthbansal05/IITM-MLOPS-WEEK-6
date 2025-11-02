@@ -3,7 +3,7 @@ import joblib
 from sklearn.model_selection  import train_test_split 
 from sklearn import svm 
 from sklearn import metrics 
-
+import os
 
 
 iris = pd.read_csv("data/data.csv")
@@ -21,6 +21,7 @@ model.fit(train_X, train_y)
 
 
 filename = 'artifacts/svm_iris_model.joblib'
+os.makedirs(os.path.dirname(filename), exist_ok=True)
 joblib.dump(model, filename)
 print(f"\nModel successfully saved as: {filename}")
 
