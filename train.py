@@ -16,7 +16,7 @@ test_X = test[['SepalLengthCm','SepalWidthCm','PetalLengthCm','PetalWidthCm']]
 test_y = test.Species 
 
 
-model = svm.SVC(kernel='linear', C=0.001)
+model = svm.SVC()
 model.fit(train_X, train_y)
 
 
