@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     # Reason for change: Added 'outputs' to pass the built image URL to the next job.
     outputs:
-      image_url: ${{ steps.build-image.outputs.image_url }}
+      image_url: ${{ steps.set_image_url.outputs.image_url }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -66,8 +66,6 @@ jobs:
         run: gcloud auth configure-docker ${{ secrets.GAR_LOCATION }}-docker.pkg.dev
 
       - name: Build and Push Docker Image to GAR
-        # Reason for change: Added an 'id' to reference this step's output later.
-        id: build-image
         uses: docker/build-push-action@v5
         with:
           context: ./application
@@ -79,6 +77,7 @@ jobs:
       
       # Reason for change: This new step explicitly sets the output variable for the deployment job to use.
       - name: Set Image URL Output
+        id: set_image_url
         run: echo "image_url=${{ secrets.GAR_LOCATION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/iris-app-repo/iris-fastapi-app:${{ github.sha }}" >> $GITHUB_OUTPUT
 
   # CD Job 2: Deploy to GKE
