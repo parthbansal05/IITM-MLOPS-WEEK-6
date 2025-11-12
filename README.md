@@ -1,6 +1,6 @@
 # **Continuous Deployment of IRIS API using GitHub Actions & GCP**
 
-**Author:** Parth Bansal  
+**Author:** Parth Bansal
 **Enrollment Number:** 21F3000805
 
 ---
@@ -84,6 +84,33 @@ Automates the CI/CD pipeline through workflow YAML files:
 * **Google Artifact Registry (Image Hosting)**
 * **Google Kubernetes Engine (Deployment)**
 * **Python, Scikit-learn, Joblib, Pandas**
+
+---
+
+## **Redeployment Instructions**
+
+To **re-deploy** the IRIS API:
+
+1. **Recreate the GKE Autopilot Cluster:**
+
+   * Open the **Google Cloud Console** → **Kubernetes Engine** → **Clusters**.
+   * Click **Create Cluster** → Select **Autopilot Mode**.
+   * Name your cluster (e.g., `iris-autopilot-cluster`) and choose a **zone** (default: `us-central1`).
+   * Click **Create** and wait for provisioning.
+
+2. **Update GitHub Secrets:**
+
+   * Go to your **GitHub repository** → **Settings** → **Secrets and variables** → **Actions**.
+   * Edit the secrets related to GKE:
+
+     * `GKE_CLUSTER_NAME` → update with the new cluster name.
+     * `GKE_ZONE` → update with the new zone.
+   * Ensure your **GCP service account key** (`GCP_SA_KEY`) remains valid.
+
+3. **Trigger Redeployment:**
+
+   * Commit and push any change (e.g., update a README file).
+   * GitHub Actions will automatically rebuild the Docker image, push it to **Artifact Registry**, and deploy it to your **new cluster**.
 
 ---
 
